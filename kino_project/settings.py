@@ -9,7 +9,6 @@ SECRET_KEY = 'django-insecure-n+zhd6fc(eg0w53x!2!8b_fu-+=4d%00^#6cohy$1(5wyth(_s
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
 ALLOWED_HOSTS = ['*']
 
 # Application definition
@@ -29,7 +28,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
+    'django.middleware.security.SecurityMiddleware',  # <-- POPRAWIONE: bez linków
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -59,11 +58,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'kino_project.wsgi.application'
 
-# Database
+# Database - ZMIANA: użyjemy Twojego pliku db.sqlite3 z repo
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': '/tmp/db.sqlite3',  # writable w Cloud Run
+        'NAME': BASE_DIR / 'db.sqlite3',  # <-- ZMIANA: standardowa ścieżka Django
     }
 }
 
@@ -84,7 +83,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
-STATIC_ROOT = '/app/staticfiles'  # <--- OBOWIĄZKOWE dla collectstatic
+STATIC_ROOT = '/app/staticfiles'
 
 # Media files
 MEDIA_URL = '/media/'
@@ -116,11 +115,11 @@ OTP_TOTP_ISSUER = 'Moje Kino'
 # Security headers
 SECURE_BROWSER_XSS_FILTER = True
 X_FRAME_OPTIONS = 'DENY'
-SECURE_CONTENT_TYPE_NOSNIFF = True  # <--- poprawiona nazwa
+SECURE_CONTENT_TYPE_NOSNIFF = True
 
 SECURE_CONTENT_SECURITY_POLICY = {
     'default-src': ("'self'",),
-    'script-src': ("'self'", "'unsafe-inline'", 'cdn.jsdelivr.net', 'unpkg.com', 'cdnjs.cloudflare.com'),
+    'script-src': ("'self'", "'unsafe-inline'", 'cdn.jsdelivr.net', 'unpkg.com', 'cdnjs.cloudflare.com'),  # <-- POPRAWIONE
     'style-src': ("'self'", "'unsafe-inline'", 'cdn.jsdelivr.net', 'fonts.googleapis.com'),
     'img-src': ("'self'", "data:", "https:"),
     'font-src': ("'self'", 'fonts.gstatic.com', 'cdn.jsdelivr.net'),
