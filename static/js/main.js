@@ -160,7 +160,7 @@ if (calendarBox && openPickerBtn) {
 
     let current = new Date();
 
-    const dayNames = ["P", "W", "Ĺš", "C", "P", "S", "N"];
+    const dayNames = ["P", "W", "Ś", "C", "P", "S", "N"];
 
     const renderCalendar = () => {
         calendarBox.innerHTML = "";
