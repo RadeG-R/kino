@@ -1,5 +1,11 @@
 import os
 from pathlib import Path
+import environ  # <--- WAŻNE: To musisz mieć zainstalowane (django-environ)
+
+# Inicjalizacja zmiennych środowiskowych
+env = environ.Env()
+# Czytanie pliku .env (jeśli istnieje lokalnie)
+environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,7 +34,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',  # <-- POPRAWIONE: bez linków
+    'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -58,13 +64,34 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'kino_project.wsgi.application'
 
-# Database - ZMIANA: użyjemy Twojego pliku db.sqlite3 z repo
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',  # <-- ZMIANA: standardowa ścieżka Django
+# --- KONFIGURACJA BAZY DANYCH (ZMIANA DLA CLOUD SQL) ---
+
+# Pobieramy nazwę połączenia (ustawisz to w Cloud Run w sekcji Variables)
+CLOUDSQL_CONNECTION_NAME = os.environ.get('CLOUDSQL_CONNECTION_NAME')
+
+if CLOUDSQL_CONNECTION_NAME:
+    # Ustawienia dla Google Cloud Run (PostgreSQL)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get('DB_NAME'),
+            'USER': os.environ.get('DB_USER'),
+            'PASSWORD': os.environ.get('DB_PASSWORD'),
+            # Kluczowe: połączenie przez Unix Socket w chmurze
+            'HOST': f'/cloudsql/{CLOUDSQL_CONNECTION_NAME}',
+            'PORT': '',
+        }
     }
-}
+else:
+    # Ustawienia lokalne (Twoje stare SQLite)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+
+# -------------------------------------------------------
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -119,7 +146,7 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 
 SECURE_CONTENT_SECURITY_POLICY = {
     'default-src': ("'self'",),
-    'script-src': ("'self'", "'unsafe-inline'", 'cdn.jsdelivr.net', 'unpkg.com', 'cdnjs.cloudflare.com'),  # <-- POPRAWIONE
+    'script-src': ("'self'", "'unsafe-inline'", 'cdn.jsdelivr.net', 'unpkg.com', 'cdnjs.cloudflare.com'),
     'style-src': ("'self'", "'unsafe-inline'", 'cdn.jsdelivr.net', 'fonts.googleapis.com'),
     'img-src': ("'self'", "data:", "https:"),
     'font-src': ("'self'", 'fonts.gstatic.com', 'cdn.jsdelivr.net'),
