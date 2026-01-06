@@ -11,3 +11,5 @@ PyMySQL==1.1.0
 cloud-sql-python-connector
 qrcode[pil]
 dj-database-url
+psycopg2-binary
+django-environ
