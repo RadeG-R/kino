@@ -1,0 +1,10 @@
+runtime: python311
+
+env: standard
+
+handlers:
+- url: /static
+  static_dir: staticfiles/
+
+- url: /.*
+  script: auto

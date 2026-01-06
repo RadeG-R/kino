@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Regulamin - Moje Kino</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" integrity="sha384-2kgbXYtcPwTEKKd9uAMlGhTUhEfAuJJgdJ0nFX75iuG76hxM2b3LxElZ1d4x6MVNV" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" integrity="sha512-sL7M4v0zCLf3V+Jeu+zHLxjfHEQhJQzKQQ/AKQDEYPZKvFbXH4LREqBn7k7N3/7Nzpjc3BFcK4v5rXVXVUpjQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha512-WXoSL2lrKOSIDlnw6/wlCH/IcZliJrJm9qfmUZoqhAW4PILCy11vpQclusCse+WcFW8z9gfqnFnRV4fsHy3V7g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+
+<body>
+
+<div class="cookies-banner" id="cookies-banner">
+  <div class="cookies-content">
+    <div class="cookies-text">
+      🍪 Używamy cookies do zapamiętywania Twoich preferencji i zapewnienia bezpieczeństwa. Poprzez kliknięcie "Zaakceptuj" wyrażasz zgodę na użycie wszystkich cookies. 
+      <a href="{% url 'cookies' %}">Dowiedz się więcej</a>
+    </div>
+    <div class="cookies-buttons">
+      <button class="cookies-btn cookies-btn--reject" id="cookies-reject">Odrzuć</button>
+      <button class="cookies-btn cookies-btn--accept" id="cookies-accept">Zaakceptuj</button>
+    </div>
+  </div>
+</div>
+<header class="site-header">
+  <div class="accessibility-panel">
+    <button id="text-decrease">A-</button>
+    <button id="text-increase">A+</button>
+    <button id="text-reset">Reset</button>
+    <button id="contrast-toggle">Kontrast</button>
+  </div>
+
+  <div class="container nav-wrapper">
+    <a href="{% url 'index' %}" class="brand">🎬 Kino</a>
+    <nav class="nav">
+      <a href="{% url 'filmy' %}">Filmy</a>
+      <a href="{% url 'seanse' %}">Seanse</a>
+
+      {% if user.is_authenticated %}
+        <a href="{% url 'konto' %}">Moje Konto</a>
+        <form action="{% url 'logout' %}" method="post" class="nav-logout-form">
+          {% csrf_token %}
+          <button type="submit" class="nav-logout-button">Wyloguj się</button>
+        </form>
+      {% else %}
+        <a href="{% url 'login' %}">Zaloguj się</a>
+      {% endif %}
+
+      <a href="{% url 'admin-panel' %}">Admin</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="regulamin-container">
+  <h1>📋 Regulamin Serwisu</h1>
+  
+  <section class="regulamin-section">
+    <h2>1. Postanowienia Ogólne</h2>
+    <p>
+      Regulamin określa zasady korzystania z serwisu Moje Kino i usług w nim oferowanych. Korzystając z serwisu, akceptujesz niniejszy regulamin.
+    </p>
+  </section>
+
+  <section class="regulamin-section">
+    <h2>2. Rejestracja i Konto Użytkownika</h2>
+    <ul>
+      <li>Rejestracja jest dobrowolna i bezpłatna</li>
+      <li>Użytkownik jest odpowiedzialny za ochronę swojego hasła</li>
+      <li>Zabrania się tworzenia fałszywych kont</li>
+      <li>Jedno konto na osobę</li>
+    </ul>
+  </section>
+
+  <section class="regulamin-section">
+    <h2>3. Rezerwacje Biletów</h2>
+    <ul>
+      <li>Rezerwacja jest ważna do 15 minut przed seansem</li>
+      <li>Po rezerwacji należy wejść na salę co najmniej 5 minut przed seansem</li>
+      <li>Anulowanie rezerwacji możliwe do 24 godzin przed seansem</li>
+      <li>Brak możliwości zwrotu pieniędzy za nieobecność</li>
+    </ul>
+  </section>
+
+  <section class="regulamin-section">
+    <h2>4. Zabrania się</h2>
+    <ul>
+      <li>Publikowania treści obraźliwych lub niezgodnych z prawem</li>
+      <li>Spamowania i harasu wobec innych użytkowników</li>
+      <li>Zmieniania lub kopiowania zawartości serwisu bez zgody</li>
+      <li>Prób włamania się na konto innego użytkownika</li>
+    </ul>
+  </section>
+
+  <section class="regulamin-section">
+    <h2>5. Odpowiedzialność</h2>
+    <p>
+      Moje Kino nie odpowiada za przeszkody techniczne, które mogą uniemożliwić rezerwację lub korzystanie z serwisu. Wszystkie dane przechowywane są zgodnie z najwyższymi standardami bezpieczeństwa.
+    </p>
+  </section>
+
+  <section class="regulamin-section">
+    <h2>6. Zmiany Regulaminu</h2>
+    <p>
+      Moje Kino zastrzega sobie prawo do zmiany niniejszego regulaminu. Zmiany wchodzą w życie z dniem opublikowania nowej wersji.
+    </p>
+  </section>
+
+  <section class="regulamin-section">
+    <h2>7. Kontakt</h2>
+    <p>
+      W razie pytań dotyczących regulaminu, prosimy o kontakt: <a href="mailto:kontakt@kino.pl">kontakt@kino.pl</a>
+    </p>
+  </section>
+</div>
+
+<style>
+  .regulamin-container {
+    max-width: 800px;
+    margin: 3rem auto;
+    padding: 0 1rem;
+  }
+
+  .regulamin-container h1 {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 2.5rem;
+  }
+
+  .regulamin-section {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: var(--card-bg, #f5f5f5);
+    border-radius: 8px;
+  }
+
+  .regulamin-section h2 {
+    margin-bottom: 1rem;
+    color: var(--accent, #ff6b00);
+    font-size: 1.3rem;
+  }
+
+  .regulamin-section ul {
+    margin-left: 1.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .regulamin-section li {
+    margin-bottom: 0.5rem;
+  }
+
+  .regulamin-section a {
+    color: var(--accent, #ff6b00);
+    text-decoration: none;
+  }
+
+  .regulamin-section a:hover {
+    text-decoration: underline;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .regulamin-section {
+      background: #222;
+    }
+  }
+</style>
+</main>
+
+<footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-section">
+        <h4>ℹ️ Informacje</h4>
+        <ul>
+          <li><a href="{% url 'info' %}">O nas</a></li>
+          <li><a href="{% url 'info' %}#godziny-otwarcia">Godziny otwarcia</a></li>
+          <li><a href="{% url 'kontakt' %}">Kontakt</a></li>
+          <li><a href="{% url 'faq' %}">FAQ</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h4>📍 Lokalizacja</h4>
+        <div id="map" class="map-container"></div>
+      </div>
+
+      <div class="footer-section">
+        <h4>📱 Media Społecznościowe</h4>
+        <div class="social-links">
+          <a href="https://facebook.com" target="_blank" rel="noopener" class="social-icon" title="Facebook">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </a>
+          <a href="https://instagram.com" target="_blank" rel="noopener" class="social-icon" title="Instagram">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0m0 2.16c2.716 0 3.05.01 4.122.06 1.065.049 1.644.228 2.025.379.51.197.873.434 1.255.816.382.382.619.745.816 1.255.151.381.33.96.379 2.025.05 1.072.06 1.406.06 4.122 0 2.716-.01 3.05-.06 4.122-.049 1.065-.228 1.644-.379 2.025-.197.51-.434.873-.816 1.255-.382.382-.745.619-1.255.816-.381.151-.96.33-2.025.379-1.072.05-1.406.06-4.122.06-2.716 0-3.05-.01-4.122-.06-1.065-.049-1.644-.228-2.025-.379-.51-.197-.873-.434-1.255-.816-.382-.382-.619-.745-.816-1.255-.151-.381-.33-.96-.379-2.025-.05-1.072-.06-1.406-.06-4.122 0-2.716.01-3.05.06-4.122.049-1.065.228-1.644.379-2.025.197-.51.434-.873.816-1.255.382-.382.745-.619 1.255-.816.381-.151.96-.33 2.025-.379 1.072-.05 1.406-.06 4.122-.06m0 3.697c-2.9 0-5.252 2.353-5.252 5.252 0 2.9 2.353 5.252 5.252 5.252 2.9 0 5.252-2.353 5.252-5.252 0-2.9-2.353-5.252-5.252-5.252m0 8.666c-1.886 0-3.414-1.529-3.414-3.414 0-1.886 1.529-3.414 3.414-3.414 1.887 0 3.414 1.529 3.414 3.414 0 1.886-1.527 3.414-3.414 3.414m5.464-8.993c0 .678-.549 1.227-1.227 1.227-.678 0-1.228-.549-1.228-1.227s.55-1.227 1.228-1.227c.678 0 1.227.549 1.227 1.227"/></svg>
+          </a>
+          <a href="https://x.com" target="_blank" rel="noopener" class="social-icon" title="X">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24h-6.627l-5.1-6.694-5.867 6.694h-3.306l7.73-8.835L2.882 2.25h6.791l4.623 6.11 5.348-6.11zM17.15 18.738h1.828L5.966 4.156H4.081l13.069 14.582z"/></svg>
+          </a>
+          <a href="https://youtube.com" target="_blank" rel="noopener" class="social-icon" title="YouTube">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p><span id="year"></span> 🎬 Kino — Wszelkie prawa zastrzeżone.</p>
+      <p style="font-size: 0.8rem; margin-top: 0.5rem;">
+        <a href="{% url 'polityka' %}">Polityka prywatności</a> | 
+        <a href="{% url 'regulamin' %}">Regulamin</a> | 
+        <a href="{% url 'cookies' %}">Cookies</a>
+      </p>
+    </div>
+  </footer>
+
+  <script src="{% static 'js/main.js' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const mapContainer = document.getElementById('map');
+  if (mapContainer && typeof L !== 'undefined') {
+    const randomLat = 52.0 + (Math.random() - 0.5) * 0.15;
+    const randomLng = 21.0 + (Math.random() - 0.5) * 0.15;
+    
+    const map = L.map('map').setView([randomLat, randomLng], 13);
+    
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors',
+      maxZoom: 19
+    }).addTo(map);
+    
+    L.marker([randomLat, randomLng]).addTo(map)
+      .bindPopup('📍 Nasze kino w Warszawie');
+  }
+});
+</script>
+</body>
+</html>

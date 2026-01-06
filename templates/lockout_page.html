@@ -1,0 +1,41 @@
+
+<!DOCTYPE html>
+{% load static %}
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <title>Konto Zablokowane</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" integrity="sha512-sL7M4v0zCLf3V+Jeu+zHLxjfHEQhJQzKQQ/AKQDEYPZKvFbXH4LREqBn7k7N3/7Nzpjc3BFcK4v5rXVXVUpjQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha512-WXoSL2lrKOSIDlnw6/wlCH/IcZliJrJm9qfmUZoqhAW4PILCy11vpQclusCse+WcFW8z9gfqnFnRV4fsHy3V7g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+  <main class="container">
+    <div class="card" style="text-align: center; margin-top: 5rem;">
+        <h1>Konto Tymczasowo Zablokowane</h1>
+        <p>Z powodu zbyt wielu nieudanych prób logowania, możliwość logowania na to konto została zablokowana.</p>
+        <p>Skontaktuj się z administratorem, aby odblokować konto.</p>
+        <a href="{% url 'index' %}" class="btn" style="margin-top: 1.5rem;">Wróć na stronę główną</a>
+    </div>
+  </main>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const mapContainer = document.getElementById('map');
+  if (mapContainer && typeof L !== 'undefined') {
+    const randomLat = 52.0 + (Math.random() - 0.5) * 0.15;
+    const randomLng = 21.0 + (Math.random() - 0.5) * 0.15;
+    
+    const map = L.map('map').setView([randomLat, randomLng], 13);
+    
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors',
+      maxZoom: 19
+    }).addTo(map);
+    
+    L.marker([randomLat, randomLng]).addTo(map)
+      .bindPopup('📍 Nasze kino w Warszawie');
+  }
+});
+</script>
+</body>
+</html>
