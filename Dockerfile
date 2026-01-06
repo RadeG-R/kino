@@ -13,12 +13,15 @@ RUN apt-get update && apt-get install -y \
     gcc \
     && rm -rf /var/lib/apt/lists/*
 
-# Kopiowanie requirements i instalacja pakietów Pythona
+# Kopiowanie requirements i instalacja pakietów
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Kopiowanie całego kodu
+# Kopiowanie całego kodu (w tym db.sqlite3)
 COPY . .
 
 # Folder na static files
 RUN mkdir -p /app/staticfiles
+
+# Collectstatic i start Gunicorna
+CMD ["sh", "-c", "python manage.py collectstatic --noinput --clear && exec gunicorn kino_project.wsgi:application --bind 0.0.0.0:$PORT --workers 1 --timeout 120"]
