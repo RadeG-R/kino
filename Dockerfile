@@ -8,10 +8,7 @@ ENV PYTHONUNBUFFERED=1
 WORKDIR /app
 
 # Instalacja zależności systemowych (libpq-dev i gcc potrzebne do psycopg2, gdybyś kiedyś przeszedł na Postgres)
-RUN apt-get update && apt-get install -y \
-    libpq-dev \
-    gcc \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y libpq-dev gcc && rm -rf /var/lib/apt/lists/*
 
 # Kopiowanie requirements i instalacja pakietów Pythona
 COPY requirements.txt .
@@ -25,6 +22,4 @@ RUN mkdir -p /app/staticfiles
 
 # WAŻNE: Migracje i collectstatic przy starcie kontenera
 # Używamy /tmp na bazę, bo jest writable
-CMD python manage.py migrate && \
-    python manage.py collectstatic --noinput && \
-    exec gunicorn kino_project.wsgi:application --bind 0.0.0.0:$PORT --workers 1
+CMD python manage.py migrate && python manage.py collectstatic --noinput && exec gunicorn kino_project.wsgi:application --bind 0.0.0.0:$PORT --workers 1
